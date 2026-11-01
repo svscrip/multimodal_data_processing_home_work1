@@ -4,6 +4,9 @@
 декодер-трансформера (MiniGPT). Оба ноутбука выполнены, все проверки зелёные, выводы ячеек
 сохранены в файлах.
 
+[![Open dz1-attention.ipynb in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/svscrip/multimodal_data_processing_home_work1/blob/main/dz1-attention.ipynb)
+[![Open dz1-bughunt.ipynb in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/svscrip/multimodal_data_processing_home_work1/blob/main/dz1-bughunt.ipynb)
+
 ## Что в репозитории
 
 | Файл | Что это |
@@ -57,12 +60,51 @@
 
 ## Как запустить
 
+### Colab (быстрый путь, ничего устанавливать не нужно)
+
+Прямые ссылки — Colab сам подтянет ноутбук из этого репозитория (он публичный, авторизация не
+нужна):
+
+- [dz1-attention.ipynb в Colab](https://colab.research.google.com/github/svscrip/multimodal_data_processing_home_work1/blob/main/dz1-attention.ipynb)
+- [dz1-bughunt.ipynb в Colab](https://colab.research.google.com/github/svscrip/multimodal_data_processing_home_work1/blob/main/dz1-bughunt.ipynb)
+
+Или вручную: `File → Open notebook → вкладка GitHub` → в поиске
+`svscrip/multimodal_data_processing_home_work1` → выбрать ноутбук.
+
+Затем `Runtime → Run all` (Ctrl+F9). Достаточно CPU-рантайма: модель крошечная, GPU не нужен,
+а `torch` и `matplotlib` в Colab уже стоят, так что ячейка установки ничего не делает. Colab
+открывает копию файла, репозиторий при запуске не меняется.
+
+Что должно быть в выводе:
+
+1. первая ячейка печатает версию torch;
+2. ячейка «Прогон» — 17 строк `ok …`, затем `пройдено 17 из 17` и `Все проверки зелёные.`;
+3. в `dz1-bughunt.ipynb` дальше идут шаги обучения (`шаг 0 …` → `итог: 3.184 -> 0.0xx`),
+   график потерь и пример сгенерированного текста;
+4. красных traceback быть не должно.
+
+Время: `dz1-attention.ipynb` — секунды, `dz1-bughunt.ipynb` — 1–3 минуты на CPU (600 шагов
+обучения).
+
+Проверка «до/после»: откройте в Colab `dz1-bughunt.backup.ipynb` и нажмите `Run all` — там
+ожидаемо `пройдено 7 из 17` и 10 упавших проверок.
+
+Одна грабля: ячейка обучения в `dz1-bughunt.ipynb` делает `cfg = GPTConfig(...)` и перетирает
+глобальный хелпер `cfg(m, **kw)` из ячейки с проверками. Если после обучения повторно запустить
+ячейку «Прогон», получите `TypeError: 'GPTConfig' object is not callable` — лечится
+`Runtime → Restart session and run all`.
+
+Чтобы забрать результат с выводами: `File → Download → Download .ipynb` или
+`File → Save a copy in Drive`.
+
+### Локально или в VS Code
+
 ```bash
 python -m pip install torch matplotlib nbformat nbclient ipykernel
 ```
 
-Открыть ноутбук в Jupyter, VS Code или Colab (ядро «Python 3») и выполнить все ячейки.
-Проверки открыты и лежат прямо в ноутбуках: ячейка «Прогон» печатает «пройдено N из N» и
+Открыть ноутбук в Jupyter или VS Code (ядро «Python 3») и выполнить все ячейки. Проверки
+открыты и лежат прямо в ноутбуках: ячейка «Прогон» печатает «пройдено N из N» и
 «Все проверки зелёные».
 
 Проверено на Python 3.12.10, torch 2.13.0+cpu, matplotlib 3.11.0.
